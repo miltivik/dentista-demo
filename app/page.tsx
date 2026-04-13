@@ -11,6 +11,7 @@ import Testimonials from '../components/Testimonials';
 import Pricing from '../components/Pricing';
 import MapSection from '../components/MapSection';
 import WhatsAppButton from '../components/WhatsAppButton';
+import ServiceModal from '../components/ServiceModal';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -21,6 +22,7 @@ export default function Home() {
   const ctaRef = useRef<HTMLDivElement>(null);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedService, setSelectedService] = useState<any>(null);
 
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
@@ -166,13 +168,17 @@ export default function Home() {
 
         <div className="services-grid grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
-            { icon: Palette, title: 'Estética', desc: 'Diseño de sonrisa personalizado.' },
-            { icon: Activity, title: 'Ortodoncia', desc: 'Alineación dental invisible.' },
-            { icon: ShieldCheck, title: 'Implantes', desc: 'Reemplazo dental duradero.' },
-            { icon: Stethoscope, title: 'Urgencias', desc: 'Atención inmediata sin espera.' },
-            { icon: Sparkles, title: 'Blanqueamiento', desc: 'Sonrisa brillante en una sesión.' },
+            { icon: Palette, title: 'Estética', desc: 'Diseño de sonrisa personalizado.', details: 'Mejoramos la apariencia de tu sonrisa mediante carillas de porcelana, contorneado dental y tratamientos estéticos avanzados. Evaluamos tu estructura facial para diseñar una sonrisa que resalte tu belleza natural.' },
+            { icon: Activity, title: 'Ortodoncia', desc: 'Alineación dental invisible.', details: 'Corregimos la posición de tus dientes utilizando alineadores transparentes de última generación o brackets estéticos. Un tratamiento cómodo, discreto y altamente efectivo para lograr una mordida perfecta.' },
+            { icon: ShieldCheck, title: 'Implantes', desc: 'Reemplazo dental duradero.', details: 'Recupera la funcionalidad y estética de tu boca con implantes de titanio biocompatibles. Una solución permanente y segura para reemplazar piezas dentales perdidas, devolviéndote la confianza al sonreír y comer.' },
+            { icon: Stethoscope, title: 'Urgencias', desc: 'Atención inmediata sin espera.', details: 'Dolor agudo, fracturas dentales o infecciones no pueden esperar. Contamos con un equipo preparado para brindarte alivio inmediato y solucionar tu problema dental con la mayor rapidez y profesionalismo.' },
+            { icon: Sparkles, title: 'Blanqueamiento', desc: 'Sonrisa brillante en una sesión.', details: 'Aclara varios tonos el color de tus dientes de forma segura y sin dañar el esmalte. Utilizamos tecnología láser y geles blanqueadores de alta calidad para resultados visibles desde la primera sesión.' },
           ].map((service, i) => (
-            <div key={i} className="service-card bg-white p-8 rounded-3xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group cursor-pointer flex flex-col h-full">
+            <div 
+              key={i} 
+              onClick={() => setSelectedService(service)}
+              className="service-card bg-white p-8 rounded-3xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group cursor-pointer flex flex-col h-full"
+            >
               <div className="flex justify-between items-start mb-16">
                 <div className="w-10 h-10 rounded-full bg-[#f4f4f0] flex items-center justify-center text-[#133c3e] group-hover:scale-110 group-hover:bg-[#82d6d6] transition-all duration-300">
                   <service.icon size={18} />
@@ -213,6 +219,15 @@ export default function Home() {
       <MapSection />
       <WhatsAppButton />
       <BookingModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <ServiceModal 
+        isOpen={!!selectedService} 
+        onClose={() => setSelectedService(null)} 
+        service={selectedService} 
+        onBook={() => {
+          setSelectedService(null);
+          setIsModalOpen(true);
+        }} 
+      />
 
       {/* FINAL CTA SECTION */}
       <section ref={ctaRef} className="py-24 px-4 md:px-8">
